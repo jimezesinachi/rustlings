@@ -5,10 +5,15 @@
 // Execute `rustlings hint primitive_types3` or use the `hint` watch subcommand
 // for a hint.
 
-// I AM NOT DONE
-
 fn main() {
-    let a = ???
+    // Create an array with numbers 1 through 100
+    let mut a: [i32; 100] = [0; 100];
+
+    for i in 0..100 {
+        a[i] = i as i32 + 1;
+    }
+
+    // let a = [1, 2, 3, 4, 5, ];
 
     if a.len() >= 100 {
         println!("Wow, that's a big array!");
