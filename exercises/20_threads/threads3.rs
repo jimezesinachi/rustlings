@@ -3,8 +3,6 @@
 // Execute `rustlings hint threads3` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
-
 use std::sync::mpsc;
 use std::sync::Arc;
 use std::thread;
@@ -26,19 +24,31 @@ impl Queue {
     }
 }
 
+// fn send_tx(q: Queue, tx: Arc<mpsc::Sender<u32>>) -> () {
 fn send_tx(q: Queue, tx: mpsc::Sender<u32>) -> () {
+    let tx = Arc::new(tx);
+
+    // let tx1 = mpsc::Sender::clone(&Arc::clone(&tx));
+    let tx1 = Arc::clone(&tx);
     thread::spawn(move || {
+        // let tx = Arc::clone(&tx);
         for val in q.first_half {
             println!("sending {:?}", val);
-            tx.send(val).unwrap();
+            // tx.send(val).unwrap();
+            tx1.send(val).unwrap();
             thread::sleep(Duration::from_secs(1));
         }
     });
 
+    // let tx2 = mpsc::Sender::clone(&Arc::clone(&tx));
+    let tx2 = Arc::clone(&tx);
+
     thread::spawn(move || {
+        // let tx = Arc::clone(&tx);
         for val in q.second_half {
             println!("sending {:?}", val);
-            tx.send(val).unwrap();
+            // tx.send(val).unwrap();
+            tx2.send(val).unwrap();
             thread::sleep(Duration::from_secs(1));
         }
     });
@@ -51,6 +61,7 @@ fn main() {
     let queue_length = queue.length;
 
     send_tx(queue, tx);
+    // send_tx(queue, Arc::new(tx));
 
     let mut total_received: u32 = 0;
     for received in rx {
